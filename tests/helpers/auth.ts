@@ -39,5 +39,12 @@ export const users = {
     email: "unverified@test.test",
     emailVerified: false,
   },
+  superuser: {
+    id: uuidv4(),
+    name: "Superuser",
+    role: "SUPERUSER",
+    email: "superuser@test.test",
+    emailVerified: true,
+  },
   guest: null,
 } satisfies Record<string, UserDetail | null>
