@@ -66,6 +66,13 @@ export default class UserSeed extends Seed {
       },
       {
         id: uuidv4(),
+        name: "Superuser",
+        role: "SUPERUSER",
+        email: "superuser@test.test",
+        emailVerified: true,
+      },
+      {
+        id: uuidv4(),
         name: "Unverified",
         role: "USER",
         email: "unverified@test.test",
@@ -83,6 +90,13 @@ export default class UserSeed extends Seed {
         role: "ADMIN",
         email: "admin@test.test",
         emailVerified: false,
+      },
+      {
+        id: uuidv4(),
+        name: "Superuser",
+        role: "SUPERUSER",
+        email: "superuser@test.test",
+        emailVerified: true,
       },
       {
         id: uuidv4(),

@@ -19,8 +19,9 @@ type CRUD<T> = {
 function notNull<T>(a: T | null) {
   return a !== null
 }
-const isAdmin = (user: UserDetail | null) => notNull(user) && user.role === "ADMIN"
-const minModerator = (user: User | null) => notNull(user) && (user.role === "MODERATOR" || user.role === "ADMIN")
+const isSuperuser = (user: User | null) => notNull(user) && user.role === "SUPERUSER"
+const isAdmin = (user: UserDetail | null) => notNull(user) && (user.role === "ADMIN" || user.role === "SUPERUSER")
+const minModerator = (user: User | null) => notNull(user) && (user.role === "MODERATOR" || user.role === "ADMIN" || user.role === "SUPERUSER")
 const verified = (user: User | null) => notNull(user) && user.emailVerified
 const everyone = defineAbility(_ => true)
 function userId<T>(extractUserId: (t: T) => string | null) {
