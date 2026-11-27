@@ -7,6 +7,7 @@ import type { Sign } from "~~/shared/types/Sign.type"
 import SignGrid from "~/components/signs/SignGrid.vue"
 
 const user = await useUser()
+const isSuperuser = user.value?.role === "SUPERUSER"
 
 watch(
   user,
@@ -35,7 +36,7 @@ const { data: experiment } = await useFetch<ExperimentDetail>(`/api/experiments/
 if (!experiment.value) {
   throw showError({ statusCode: 404, statusMessage: "Versuch nicht gefunden" })
 }
-if (experiment.value?.status !== "DRAFT" && experiment.value?.status !== "REJECTED") {
+if (!isSuperuser && experiment.value?.status !== "DRAFT" && experiment.value?.status !== "REJECTED") {
   await navigateTo(`/experiments/${experimentId}`, { replace: true })
 }
 

@@ -247,7 +247,7 @@ const { openReports, dismissReport, startRevision } = useExperimentReports(toRef
             </span>
           </DropdownMenuItem>
           <DropdownMenuItem
-            v-else-if="user.id === experiment.userId && (experiment.status === 'DRAFT' || experiment.status === 'REJECTED')"
+            v-else-if="(user.id === experiment.userId && (experiment.status === 'DRAFT' || experiment.status === 'REJECTED'))||(user.role === 'SUPERUSER')"
           >
             <NuxtLink
               :to="`/experiments/edit/${experiment.id}`"
@@ -257,7 +257,7 @@ const { openReports, dismissReport, startRevision } = useExperimentReports(toRef
             </NuxtLink>
           </DropdownMenuItem>
           <DropdownMenuItem
-            v-if="(user.id === experiment.userId || user.role === 'ADMIN')"
+            v-if="(user.id === experiment.userId || user.role === 'SUPERUSER')"
             class="text-destructive"
             @click="showDeleteDialog = true"
           >
