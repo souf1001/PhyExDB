@@ -74,6 +74,7 @@ onMounted(() => {
 })
 
 const showDeleteDialog = ref(false)
+const showEditDialog = ref(false)
 const sectionImageStartIndices = computed(() => {
   if (!experiment?.sections) return []
 
@@ -160,6 +161,15 @@ function getServerFileName(path: string) {
 }
 
 const { openReports, dismissReport, startRevision } = useExperimentReports(toRef(() => experiment))
+
+// function to help handle the edit dialog
+function handleEdit(experimentId: string) {
+  if (user.value?.role === "SUPERUSER" && user.value?.id !== experiment?.userId) {
+    showEditDialog.value = true
+  } else {
+    navigateTo(`/experiments/edit/${experimentId}`)
+  }
+}
 </script>
 
 <template>
@@ -214,7 +224,7 @@ const { openReports, dismissReport, startRevision } = useExperimentReports(toRef
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem
-            v-if="(user.role === 'ADMIN')"
+            v-if="(user.role === 'ADMIN')||(user.role ==='SUPERUSER')"
             @click="navigateTo(`/users?search=${experiment.userId}`)"
           >
             <span>
@@ -248,13 +258,11 @@ const { openReports, dismissReport, startRevision } = useExperimentReports(toRef
           </DropdownMenuItem>
           <DropdownMenuItem
             v-else-if="(user.id === experiment.userId && (experiment.status === 'DRAFT' || experiment.status === 'REJECTED'))||(user.role === 'SUPERUSER')"
+            @click="handleEdit(experiment.id)"
           >
-            <NuxtLink
-              :to="`/experiments/edit/${experiment.id}`"
-              class="no-underline w-full block"
-            >
+            <span>
               Bearbeiten
-            </NuxtLink>
+            </span>
           </DropdownMenuItem>
           <DropdownMenuItem
             v-if="(user.id === experiment.userId || user.role === 'SUPERUSER')"
@@ -285,6 +293,11 @@ const { openReports, dismissReport, startRevision } = useExperimentReports(toRef
         v-model="showDeleteDialog"
         :on-delete="() => deleteExperiment(experiment.id).then(async () => await navigateTo('/experiments'))"
         header="Versuch löschen?"
+        :message="user?.role === 'SUPERUSER' && experiment.userId !== user?.id ? 'Das ist nicht dein Versuch. Willst du das Experiment wirklich löschen?' : undefined"
+      />
+      <ConfirmForeignEditDialog
+        v-model="showEditDialog"
+        :on-edit="() => navigateTo(`/experiments/edit/${experiment.id}`)"
       />
     </div>
     <!-- Rating -->
